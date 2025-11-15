@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chatbot</title>
+    <style>
+        body { font-family:  fantasy; margin: 40px; }
+        #chat { width: 800px; height: 500px; border: 2px solid #aaa; padding: 10px; overflow-y: scroll; }
+        #input { width: 500px; padding: 10px; }
+        #send { padding: 10px 17px; }
+    </style>
+</head>
+<body>
+
+<h2>Gungun's Chatbot</h2>
+<div id="chat"></div>
+
+<input id="input" type="text" placeholder="Type your message..." />
+<button id="send">Send</button>
+
+<script>
+document.getElementById("send").onclick = async function () {
+    const msg = document.getElementById("input").value;
+    if (!msg) return;
+
+    // show user message
+    document.getElementById("chat").innerHTML += "<p><b>You:</b> " + msg + "</p>";
+
+    const response = await fetch("http://127.0.0.1:5000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("chat").innerHTML += "<p><b>Bot:</b> " + data.reply + "</p>";
+
+    document.getElementById("input").value = "";
+};
+</script>
+
+</body>
+</html>
